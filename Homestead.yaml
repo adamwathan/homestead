@@ -1,6 +1,6 @@
 ---
 ip: "192.168.10.10"
-memory: 2024
+memory: 2048
 cpus: 1
 
 authorize: /Users/me/.ssh/id_rsa.pub
@@ -15,3 +15,5 @@ folders:
 sites:
     - map: homestead.app
       to: /home/vagrant/Code/Laravel/public
+
+nfs: true

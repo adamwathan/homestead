@@ -40,9 +40,24 @@ class Homestead
       s.inline = "cp /vagrant/aliases /home/vagrant/.bash_aliases"
     end
 
+    # Disable sendfile if NFS is turned on
+    if settings["nfs"] == true
+      config.vm.provision "shell" do |s|
+          s.inline = "bash /vagrant/scripts/disable-sendfile.sh"
+      end
+    end
+
     # Register All Of The Configured Shared Folders
     settings["folders"].each do |folder|
-      config.vm.synced_folder folder["map"], folder["to"]
+      options = {}
+      if settings["nfs"] == true
+        options = {
+            id: "core",
+            :nfs => true,
+            :mount_options => ['nolock,vers=3,udp,noatime']
+        }
+      end
+      config.vm.synced_folder folder["map"], folder["to"], options
     end
 
     # Install All The Configured Nginx Sites
